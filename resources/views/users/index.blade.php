@@ -6,29 +6,49 @@
     <h1>All Users</h1>
 
     @if (session('success'))
-        <div class="alert alert-success">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
     @endif
+
+    @if (session('danger'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('danger') }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
 
     <div class="mb-3">
         <a href="{{ route('users.create') }}" class="btn btn-primary">Create New User</a>
     </div>
 
-    <div class="row">
-        @forelse ($users as $user)
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $user->first_name }} {{ $user->last_name }}</h5>
-                        <p class="card-text">{{ $user->email }}</p>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="col-12">
-                <p>No users found.</p>
-            </div>
-        @endforelse
-    </div>
+    <!-- Users Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($profiles as $profile)
+                <tr>
+                    <td>{{ $profile->id }}</td>
+                    <td>{{ $profile->first_name }} {{ $profile->last_name }}</td>
+                    <td>{{ $profile->users->email ?? 'No email available' }}</td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3" class="text-center">No users found.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 @endsection

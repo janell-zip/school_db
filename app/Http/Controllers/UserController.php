@@ -9,9 +9,16 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function index() {
-        $users = User::all();
+        /*$users = User::all();
 
         return view('users.index', ['users' => $users]);
+        */
+
+        $profileData = Profile::with('users')->get();
+
+        return view('users.index', [
+            'profiles' => $profileData,
+        ]);
     }
 
     public function create() {
@@ -20,17 +27,26 @@ class UserController extends Controller
 
     public function store(Request $request) {
 
+        $request->validate([
+            'first_name' => 'required|min:3|max:255',
+            'last_name' => 'required|min:3|max:255',
+            'contact_number' => 'required|max:11',
+            'address' => 'required|max:255',
+            'email' => 'required|unique:users,email',
+            'password' => 'required|min:6|max:8',
+        ]);
+
         Profile::create([
             'first_name' => $request['first_name'],
             'last_name' => $request['last_name'],
             'contact_number' => $request['contact_number'],
             'address' => $request['address']
-        ])->users()->create([
+        ])->users()->create([ // Calls users() method in Profile (model)
             'email' => $request['email'],
             'password' => $request['password'],
         ]);
 
-        return redirect(route('users.index'));
+        return redirect(route('users.index'))->with('success', 'User created successfully!');
     }
 
     /*
