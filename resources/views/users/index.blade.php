@@ -3,7 +3,7 @@
 @section('title', 'All Users')
 
 @section('content')
-    <h1>All Users</h1>
+    <h1>All Users!</h1>
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
